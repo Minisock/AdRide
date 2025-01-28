@@ -9,7 +9,7 @@ export const createPaymentIntent = async (req, res) => {
     switch (method) {
       case 'card':
         const paymentIntent = await stripe.paymentIntents.create({
-          amount: amount * 100, // Convert to cents
+          amount: amount * 100, 
           currency,
         });
         paymentResult = { clientSecret: paymentIntent.client_secret };
@@ -17,7 +17,7 @@ export const createPaymentIntent = async (req, res) => {
 
       case 'upi':
         const order = await razorpay.orders.create({
-          amount: amount * 100, // Convert to paise
+          amount: amount * 100, 
           currency: 'INR',
           payment_capture: 1,
         });
@@ -28,7 +28,6 @@ export const createPaymentIntent = async (req, res) => {
         return res.status(400).json({ error: 'Invalid payment method' });
     }
 
-    // Save payment record
     await Payment.create({
       user: req.user._id,
       amount,
