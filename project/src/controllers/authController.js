@@ -1,46 +1,33 @@
-const User = require("../models/userModel");
-const { generateToken } = require("../utils/jwtUtil");
+import User from '../models/User.js';
+import bcrypt from 'bcryptjs';
+import { generateTokens } from '../utils/jwt.js';
 
-const registerUser = async (req, res) => {
+export const register = async (req, res) => {
   try {
-    const { email, password } = req.body;
-
+    const { email, password, role } = req.body;
     const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({ message: "User already exists" });
-    }
+    if (existingUser) return res.status(400).json({ error: 'Email already exists' });
 
-    const newUser = new User({ email, password });
-    await newUser.save();
+    const user = await User.create({ email, password, role });
+    const tokens = generateTokens(user);
+    user.refreshTokens.push(tokens.refreshToken);
+    await user.save();
 
-    const token = generateToken(newUser._id);
-
-    res.status(201).json({ message: "User registered successfully", token });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(201).json(tokens);
+  } catch (err) {
+    res.status(500).json({ error: 'Registration failed' });
   }
 };
 
-const loginUser = async (req, res) => {
-  try {
-    const { email, password } = req.body;
-
-    const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(400).json({ message: "Invalid credentials" });
-    }
-
-    const isMatch = await user.comparePassword(password);
-    if (!isMatch) {
-      return res.status(400).json({ message: "Invalid credentials" });
-    }
-
-    const token = generateToken(user._id);
-
-    res.status(200).json({ message: "Login successful", token });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+export const login = async (req, res) => {
+  const { email, password } = req.body;
+  const user = await User.findOne({ email });
+  if (!user || !(await bcrypt.compare(password, user.password))) {
+    return res.status(401).json({ error: 'Invalid credentials' });
   }
-};
 
-module.exports = { registerUser, loginUser };
+  const tokens = generateTokens(user);
+  user.refreshTokens.push(tokens.refreshToken);
+  await user.save();
+  res.status(200).json(tokens);
+};
