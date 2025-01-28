@@ -23,7 +23,6 @@ class _YourWallPageState extends State<YourWallPage> {
 
   @override
   Widget build(BuildContext context) {
-    // Create an instance of AppColors to use instance-based color access
     final colors = AppColors();
 
     return Scaffold(
@@ -66,8 +65,24 @@ class _YourWallPageState extends State<YourWallPage> {
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
+                    Text( 'CONGRATULATIONS',
+                          style: AppTextStyles.subtitle1.copyWith(
+                          color: const Color.fromARGB(255, 13, 133, 55),
+                          fontSize: 32,
+                          fontWeight: FontWeight.w900,
+                        ),
+                    ),
+                    SizedBox(height: 10),
+                    Text( 'Your wall is been listed on ADRIDE',
+                          style: AppTextStyles.subtitle1.copyWith(
+                          color: const Color.fromARGB(255, 0, 0, 0),
+                          fontSize: 16,
+                          fontWeight: FontWeight.w900,
+                        ),
+                    ),
+                    SizedBox(height: 30),
                     Stack(
                       children: [
                         Container(

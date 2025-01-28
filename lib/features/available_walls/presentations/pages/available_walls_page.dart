@@ -24,7 +24,6 @@ class _AvailableWallsPageState extends State<AvailableWallsPage> {
 
   @override
   Widget build(BuildContext context) {
-    // Create an instance of AppColors to use instance-based color access
     final colors = AppColors();
 
     return Scaffold(

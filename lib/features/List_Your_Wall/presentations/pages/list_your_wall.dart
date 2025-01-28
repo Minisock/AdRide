@@ -40,7 +40,6 @@ class _ListWallsPageState extends State<ListWallsPage> {
 
   @override
   Widget build(BuildContext context) {
-    // Create an instance of AppColors to use instance-based access
     final colors = AppColors();
 
     return Scaffold(
