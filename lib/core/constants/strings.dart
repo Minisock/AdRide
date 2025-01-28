@@ -39,5 +39,6 @@ abstract class AppStrings {
   static const String ListYourWall = 'List Your Wall';
   static const String CreateAd = 'Create Ad';
 
-
+  //Your Wall Page
+  static const String YourWall = 'Your Wall';
 }

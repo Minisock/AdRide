@@ -3,6 +3,7 @@ import 'package:app/features/authentication/presentation/screens/login_body.dart
 import 'package:app/features/authentication/presentation/screens/signup_body.dart';
 import 'package:app/features/available_walls/presentations/pages/available_walls_page.dart';
 import 'package:app/features/splashscreen/screens/splash_screen.dart';
+import 'package:app/features/your_wall/presentations/pages/your_wall.dart';
 import 'package:flutter/material.dart';
 
 class AppRoutes {
@@ -16,7 +17,7 @@ class AppRoutes {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case home:
-        return MaterialPageRoute(builder: (_) => ListWallsPage());
+        return MaterialPageRoute(builder: (_) => YourWallPage());
       case login:
         return MaterialPageRoute(builder: (_) => const LoginBody());
       case signUp:

@@ -30,8 +30,14 @@ class AppColors implements Colorgraphy {
   @override
   Color get activeGreen => const Color(0xFF4CAF50);
 
+  Color get activeYellow => const Color.fromARGB(255, 254, 214, 94);
+
   @override
   Color get cancelRed => const Color(0xFFF44336);
+
+
+  @override
+  Color get blackbutton => Colors.black;
 
   // Text Colors
   @override
