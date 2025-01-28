@@ -1,19 +1,26 @@
-const { verifyToken } = require("../utils/jwtUtil");
+import jwt from 'jsonwebtoken';
+import { ACCESS_TOKEN_SECRET } from '../config/env.js';
+import User from '../models/User.js';
 
-const authenticateUser = (req, res, next) => {
-  const token = req.header("Authorization")?.replace("Bearer ", "");
-
-  if (!token) {
-    return res.status(401).json({ message: "Access denied. No token provided." });
-  }
-
+export const authenticate = async (req, res, next) => {
   try {
-    const decoded = verifyToken(token);
-    req.userId = decoded.userId;
+    const token = req.headers.authorization?.split(' ')[1];
+    if (!token) return res.status(401).json({ error: 'Unauthorized' });
+
+    const decoded = jwt.verify(token, ACCESS_TOKEN_SECRET);
+    const user = await User.findById(decoded.userId);
+    if (!user) return res.status(401).json({ error: 'User not found' });
+
+    req.user = user;
     next();
-  } catch (error) {
-    res.status(400).json({ message: "Invalid token" });
+  } catch (err) {
+    res.status(401).json({ error: 'Invalid token' });
   }
 };
 
-module.exports = authenticateUser;
+export const authorize = (roles) => (req, res, next) => {
+  if (!roles.includes(req.user.role)) {
+    return res.status(403).json({ error: 'Access denied' });
+  }
+  next();
+};

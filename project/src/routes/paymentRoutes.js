@@ -1,8 +1,8 @@
 import express from 'express';
 import { authenticate } from '../middlewares/authMiddleware.js';
-import { getUserProfile } from '../controllers/userController.js';
+import { createPaymentIntent } from '../controllers/paymentController.js';
 
 const router = express.Router();
 router.use(authenticate);
-router.get('/profile', getUserProfile);
+router.post('/create-intent', createPaymentIntent);
 export default router;

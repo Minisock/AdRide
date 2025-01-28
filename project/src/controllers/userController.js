@@ -1,10 +1,10 @@
-const AdWall = require('../models/adWallModel');
+import User from '../models/User.js';
 
-exports.getAdWalls = async (req, res) => {
+export const getUserProfile = async (req, res) => {
   try {
-    const adWalls = await AdWall.find();
-    res.status(200).json(adWalls);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+    const user = await User.findById(req.user._id).select('-password -refreshTokens');
+    res.status(200).json(user);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch profile' });
   }
 };
