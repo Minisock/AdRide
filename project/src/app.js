@@ -11,6 +11,7 @@ import paymentRoutes from './routes/paymentRoutes.js';
 import { notFound, errorHandler } from './middlewares/errorHandler.js';
 
 const app = express();
+
 app.use(express.json());
 app.use(cors());
 app.use(morgan('dev'));
@@ -21,6 +22,10 @@ app.use('/api/advertiser', adCampaignRoutes);
 app.use('/api/operator', vehicleRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/payments', paymentRoutes);
+
+app.get('/', (req, res) => {
+  res.send({ message: "API is running..." });
+});
 
 app.use(notFound);
 app.use(errorHandler);
