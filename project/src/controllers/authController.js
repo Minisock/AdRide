@@ -15,6 +15,7 @@ export const register = async (req, res) => {
 
     res.status(201).json(tokens);
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: 'Registration failed' });
   }
 };
