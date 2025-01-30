@@ -5,16 +5,26 @@ import User from '../models/User.js';
 export const authenticate = async (req, res, next) => {
   try {
     const token = req.headers.authorization?.split(' ')[1];
-    if (!token) return res.status(401).json({ error: 'Unauthorized' });
+    if (!token) return res.status(401).json({ error: 'Unauthorized - No Token Provided' });
 
-    const decoded = jwt.verify(token, ACCESS_TOKEN_SECRET);
-    const user = await User.findById(decoded.userId);
+    let decoded;
+    try {
+      decoded = jwt.verify(token, ACCESS_TOKEN_SECRET);
+    } catch (jwtError) {
+      return res.status(401).json({ error: 'Invalid or Expired Token' });
+    }
+
+    const user = await User.findById(decoded.userId).catch(err => {
+      console.error('Database Error:', err);
+      return res.status(500).json({ error: 'Database Error' });
+    });
+
     if (!user) return res.status(401).json({ error: 'User not found' });
 
     req.user = user;
     next();
   } catch (err) {
-    res.status(401).json({ error: 'Invalid token' });
+    next(err); 
   }
 };
 

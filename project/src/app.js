@@ -1,6 +1,9 @@
 import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
+// import passport from 'passport';
+// import session from 'express-session';
+// import './config/passport.js';
 import { connectDB } from './config/database.js';
 import authRoutes from './routes/authRoutes.js';
 import wallRoutes from './routes/wallRoutes.js';
@@ -27,6 +30,9 @@ app.get('/', (req, res) => {
   res.send({ message: "API is running..." });
 });
 
+// app.use(session({secret:'your_secret_key', resave:false,saveUninitialized:false}));
+// app.use(passport.initialize());
+// app.use(passport.session());
 app.use(notFound);
 app.use(errorHandler);
 

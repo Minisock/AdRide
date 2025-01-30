@@ -2,19 +2,19 @@ import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 
 const userSchema = new mongoose.Schema({
+  name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
+  phone: { type: String, required: true },
   role: { 
     type: String, 
-    enum: ['owner', 'advertiser', 'operator', 'admin'], 
-    default: 'owner' 
+    enum: ['wallOwner', 'Autowala/HelmetWala', 'admin', 'advertiser'], 
+    default: 'wallOwner' 
   },
-  refreshTokens: [String],
-  profile: {
-    name: String,
-    phone: String,
-    company: String,
-  },
+  refreshTokens: { type: [String], default: [] }, // Initialize as an empty array
+  // googleId: String,  // 🔴 Commented out Google authentication field
+  // facebookId: String, // 🔴 Commented out Facebook authentication field
+  // twitterId: String,  // 🔴 Commented out Twitter authentication field
 });
 
 userSchema.pre('save', async function (next) {
