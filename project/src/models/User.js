@@ -11,10 +11,10 @@ const userSchema = new mongoose.Schema({
     enum: ['wallOwner', 'Autowala/HelmetWala', 'admin', 'advertiser'], 
     default: 'wallOwner' 
   },
-  refreshTokens: { type: [String], default: [] }, // Initialize as an empty array
-  // googleId: String,  // 🔴 Commented out Google authentication field
-  // facebookId: String, // 🔴 Commented out Facebook authentication field
-  // twitterId: String,  // 🔴 Commented out Twitter authentication field
+  refreshTokens: { type: [String], default: [] }, 
+  googleId: String, 
+  facebookId: String, 
+  twitterId: String, 
 });
 
 userSchema.pre('save', async function (next) {

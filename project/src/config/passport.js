@@ -3,12 +3,33 @@ import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import { Strategy as FacebookStrategy } from 'passport-facebook';
 import { Strategy as TwitterStrategy } from 'passport-twitter';
 import User from '../models/User.js';
+import dotenv from 'dotenv';
 
+dotenv.config(); 
+
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
+const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
+const FACEBOOK_CLIENT_ID = process.env.FACEBOOK_CLIENT_ID;
+const FACEBOOK_CLIENT_SECRET = process.env.FACEBOOK_CLIENT_SECRET;
+const TWITTER_CLIENT_ID = process.env.TWITTER_CLIENT_ID;
+const TWITTER_CLIENT_SECRET = process.env.TWITTER_CLIENT_SECRET;
+
+if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET) {
+  throw new Error("Missing Google OAuth credentials in .env");
+}
+if (!FACEBOOK_CLIENT_ID || !FACEBOOK_CLIENT_SECRET) {
+  throw new Error("Missing Facebook OAuth credentials in .env");
+}
+if (!TWITTER_CLIENT_ID || !TWITTER_CLIENT_SECRET) {
+  throw new Error("Missing Twitter OAuth credentials in .env");
+}
+
+// Google Strategy
 passport.use(new GoogleStrategy({
-  clientID: process.env.GOOGLE_CLIENT_ID,
-  clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+  clientID: GOOGLE_CLIENT_ID,
+  clientSecret: GOOGLE_CLIENT_SECRET,
   callbackURL: '/api/auth/google/callback',
-}, async (accessToken, refreshToken, profile, done) => {
+}, async (profile, done) => {
   let user = await User.findOne({ googleId: profile.id });
   if (!user) {
     user = await User.create({ name: profile.displayName, email: profile.emails[0].value, googleId: profile.id, role: 'wallOwner' });
@@ -16,12 +37,13 @@ passport.use(new GoogleStrategy({
   done(null, user);
 }));
 
+// Facebook Strategy
 passport.use(new FacebookStrategy({
-  clientID: process.env.FACEBOOK_CLIENT_ID,
-  clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
+  clientID: FACEBOOK_CLIENT_ID,
+  clientSecret: FACEBOOK_CLIENT_SECRET,
   callbackURL: '/api/auth/facebook/callback',
   profileFields: ['id', 'displayName', 'email'],
-}, async (accessToken, refreshToken, profile, done) => {
+}, async (profile, done) => {
   let user = await User.findOne({ facebookId: profile.id });
   if (!user) {
     user = await User.create({ name: profile.displayName, email: profile.emails[0].value, facebookId: profile.id, role: 'wallOwner' });
@@ -29,11 +51,12 @@ passport.use(new FacebookStrategy({
   done(null, user);
 }));
 
+// Twitter Strategy
 passport.use(new TwitterStrategy({
-  consumerKey: process.env.TWITTER_CLIENT_ID,
-  consumerSecret: process.env.TWITTER_CLIENT_SECRET,
+  consumerKey: TWITTER_CLIENT_ID,
+  consumerSecret: TWITTER_CLIENT_SECRET,
   callbackURL: '/api/auth/twitter/callback',
-}, async (token, tokenSecret, profile, done) => {
+}, async (profile, done) => {
   let user = await User.findOne({ twitterId: profile.id });
   if (!user) {
     user = await User.create({ name: profile.displayName, twitterId: profile.id, role: 'wallOwner' });

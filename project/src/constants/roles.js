@@ -1,1 +1,1 @@
-export const roles = ['owner', 'advertiser', 'operator', 'admin'];
+export const roles =  ['wallOwner', 'Autowala/HelmetWala', 'admin', 'advertiser'];
